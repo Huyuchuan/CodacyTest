@@ -345,7 +345,7 @@ void startUI() {
 //声明场景巡场实现
 void viewScence() {
 	int xMin = WIN_WIDTH - imgBg.getwidth();
-	vector2 points[9] = { {550,80},{530,160},{630,170},{530,200},{525,270},		//9个僵尸站位
+	const vector2 points[9] = { {550,80},{530,160},{630,170},{530,200},{525,270},		//9个僵尸站位
 		{565,370},{605,340},{705,280},{690,340}};
 	int index[9];
 	for (int i = 0; i < 9; i++) {
@@ -397,7 +397,7 @@ void viewScence() {
 			if (count >= 10) {
 				index[k] = (index[k] + 1) % 11;
 			}
-			if (count >= 10)count = 0;
+			count = 0;
 		}
 		
 		EndBatchDraw();
@@ -522,7 +522,7 @@ void updateWindow() {
 
 //用户点击实现
 void userClick() {
-	static	int status = 0;
+	int status = 0;
 	ExMessage	msg;
 	if (peekmessage(&msg)) {	//判断用户是否有操作
 		if (msg.message == WM_LBUTTONDOWN) {	//鼠标左键按下
@@ -552,7 +552,7 @@ void userClick() {
 				}
 				else if (index == SHI_REN_HUA) {
 					if (sunShine >= 150) {
-						status = 1;
+						//status = 1;
 						curZhiWu = index + 1;
 						//使植物显示在点击位置，避免了植物出现在上次消失位置的小bug
 						curX = msg.x;
@@ -579,6 +579,11 @@ void userClick() {
 			if (msg.x > 256 - 112 && msg.x < 900 - 30 && msg.y > 179 && msg.y < 489) {
 				int	row = (msg.y - 179) / 102;	//获取行
 				int	col = (msg.x - 256 + 112) / 81;	//获取列
+
+				// 添加边界检查
+				if (row >= 3) row = 2;
+				if (col >= 9) col = 8;
+
 				if (map[row][col].type == 0) {
 					map[row][col].type = curZhiWu;	//给鼠标当前行种下植物
 					map[row][col].frameIndex = 0;	//渲染植物第一帧
@@ -588,9 +593,10 @@ void userClick() {
 					map[row][col].y = 179 + row * 102 + 14;
 				}
 			}
+
 			//使植物释放消失
 			curZhiWu = 0;
-			status = 0;
+			//status = 0;
 			//重置植物的坐标
 			//curX = 1000;
 			//curY = 1000;
