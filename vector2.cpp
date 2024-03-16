@@ -3,22 +3,22 @@
 #include "vector2.h"
 
 //加法
-explicit vector2 operator +(vector2 x, vector2 y) {
+vector2 operator +(vector2 x, vector2 y) {
 	return vector2(x.x + y.x, x.y + y.y ); 
 }
 
 //减法
-explicit vector2 operator -(vector2 x, vector2 y) {
+vector2 operator -(vector2 x, vector2 y) {
 	return vector2(x.x - y.x, x.y - y.y);
 }
 
 // 乘法
-explicit vector2 operator *(vector2 x, vector2 y) {
+vector2 operator *(vector2 x, vector2 y) {
 	return vector2(x.x * y.x - x.y * y.y, x.y * y.x + x.x * y.y);
 }
 
 // 乘法
-explicit vector2 operator *(vector2 y, float x) {
+vector2 operator *(vector2 y, float x) {
 	return vector2(x*y.x, x*y.y);
 }
 

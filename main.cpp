@@ -201,7 +201,7 @@ int main() {
 	
 	//EndBatchDraw();
 
-	system("pause");
+	cin.get();
 
 	return 0;
 }
@@ -532,7 +532,7 @@ void userClick() {
 				//判断阳光值是否足够购买植物
 				if (index == XIANG_RI_KUI) {
 					if (sunShine >= 50) {
-						status = 1;
+						//status = 1;
 						curZhiWu = index + 1;
 						//使植物显示在点击位置，避免了植物出现在上次消失位置的小bug
 						curX = msg.x;
@@ -542,7 +542,7 @@ void userClick() {
 				}
 				else if (index == WAN_DAO) {
 					if (sunShine >= 100) {
-						status = 1;
+						//status = 1;
 						curZhiWu = index + 1;
 						//使植物显示在点击位置，避免了植物出现在上次消失位置的小bug
 						curX = msg.x;
@@ -828,7 +828,7 @@ void updateSunShine() {
 }
 
 //收集阳光实现
-void collectSunshine(ExMessage* msg) {
+void collectSunshine(const ExMessage* msg) {
 	int w = imgSunShineBall[0].getwidth();	//单个阳光球的宽度
 	int h = imgSunShineBall[0].getheight();	//单个阳光球的高度
 	for (int i = 0; i < ballMax; i++) {
