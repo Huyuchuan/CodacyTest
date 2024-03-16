@@ -201,7 +201,7 @@ int main() {
 	
 	//EndBatchDraw();
 
-	cin.get();
+	system("pause");
 
 	return 0;
 }
@@ -306,7 +306,7 @@ void gameInit() {
 	gettextstyle(&f);
 	f.lfHeight = 30;
 	f.lfWeight = 15;
-	strcpy_s(f.lfFaceName, "Segoe UI Black");	//设置字体效果
+	strcpy(f.lfFaceName, "Segoe UI Black");	//设置字体效果
 	f.lfQuality = ANTIALIASED_QUALITY;		//抗锯齿
 	settextstyle(&f);
 	setbkmode(TRANSPARENT);					//字体模式：背景透明
@@ -345,7 +345,7 @@ void startUI() {
 //声明场景巡场实现
 void viewScence() {
 	int xMin = WIN_WIDTH - imgBg.getwidth();
-	const vector2 points[9] = { {550,80},{530,160},{630,170},{530,200},{525,270},		//9个僵尸站位
+	vector2 points[9] = { {550,80},{530,160},{630,170},{530,200},{525,270},		//9个僵尸站位
 		{565,370},{605,340},{705,280},{690,340}};
 	int index[9];
 	for (int i = 0; i < 9; i++) {
@@ -397,7 +397,7 @@ void viewScence() {
 			if (count >= 10) {
 				index[k] = (index[k] + 1) % 11;
 			}
-			count = 0;
+			if (count >= 10)count = 0;
 		}
 		
 		EndBatchDraw();
@@ -522,7 +522,7 @@ void updateWindow() {
 
 //用户点击实现
 void userClick() {
-	int status = 0;
+	static	int status = 0;
 	ExMessage	msg;
 	if (peekmessage(&msg)) {	//判断用户是否有操作
 		if (msg.message == WM_LBUTTONDOWN) {	//鼠标左键按下
@@ -532,7 +532,7 @@ void userClick() {
 				//判断阳光值是否足够购买植物
 				if (index == XIANG_RI_KUI) {
 					if (sunShine >= 50) {
-						//status = 1;
+						status = 1;
 						curZhiWu = index + 1;
 						//使植物显示在点击位置，避免了植物出现在上次消失位置的小bug
 						curX = msg.x;
@@ -542,7 +542,7 @@ void userClick() {
 				}
 				else if (index == WAN_DAO) {
 					if (sunShine >= 100) {
-						//status = 1;
+						status = 1;
 						curZhiWu = index + 1;
 						//使植物显示在点击位置，避免了植物出现在上次消失位置的小bug
 						curX = msg.x;
@@ -552,7 +552,7 @@ void userClick() {
 				}
 				else if (index == SHI_REN_HUA) {
 					if (sunShine >= 150) {
-						//status = 1;
+						status = 1;
 						curZhiWu = index + 1;
 						//使植物显示在点击位置，避免了植物出现在上次消失位置的小bug
 						curX = msg.x;
@@ -579,11 +579,6 @@ void userClick() {
 			if (msg.x > 256 - 112 && msg.x < 900 - 30 && msg.y > 179 && msg.y < 489) {
 				int	row = (msg.y - 179) / 102;	//获取行
 				int	col = (msg.x - 256 + 112) / 81;	//获取列
-
-				// 添加边界检查
-				if (row >= 3) row = 2;
-				if (col >= 9) col = 8;
-
 				if (map[row][col].type == 0) {
 					map[row][col].type = curZhiWu;	//给鼠标当前行种下植物
 					map[row][col].frameIndex = 0;	//渲染植物第一帧
@@ -593,10 +588,9 @@ void userClick() {
 					map[row][col].y = 179 + row * 102 + 14;
 				}
 			}
-
 			//使植物释放消失
 			curZhiWu = 0;
-			//status = 0;
+			status = 0;
 			//重置植物的坐标
 			//curX = 1000;
 			//curY = 1000;
@@ -606,9 +600,8 @@ void userClick() {
 
 //判断文件是否存在实现
 bool fileExist(const char* name) {
-	FILE* fp;
-	errno_t err = fopen_s(&fp, name, "r");
-	if (err != 0) {
+	FILE* fp=fopen(name, "r");
+	if (fp == NULL) {
 		return false;
 	}
 	else {
@@ -828,7 +821,7 @@ void updateSunShine() {
 }
 
 //收集阳光实现
-void collectSunshine(const ExMessage* msg) {
+void collectSunshine(ExMessage* msg) {
 	int w = imgSunShineBall[0].getwidth();	//单个阳光球的宽度
 	int h = imgSunShineBall[0].getheight();	//单个阳光球的高度
 	for (int i = 0; i < ballMax; i++) {
